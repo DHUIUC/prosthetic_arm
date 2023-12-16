@@ -46,6 +46,9 @@ us = Ultrasonic(Pin('D8'), Pin('D9'))
 # Init Servo
 # print("Init Servo: %s" % ultrasonic_servo_offset)
 
+
+### FINGERS ###
+
 #pointer finger setup
 pointer_finger = Servo(PWM("P0"), offset=0) #set offset as needed
 
@@ -59,6 +62,18 @@ ring_finger = Servo(PWM("P2"), offset=0) #set offset as needed
 pinky_finger = Servo(PWM("P3"), offset=0) #set offset as needed
 
 
+#thumb - unconventional becuase not using I2C
+
+# thumb = Pin('D3')
+# thumb.pwmInit()
+
+# #thumb finger setup using Pin for Servo rather than PWM
+# #
+# # TEST RIGOROUSLY, MAY NOT EVEN WORK. SEE IF YOU CAN JUST USE PWM on D pin
+# thumb_finger = Servo(thumb, offset=0) #set offset as needed
+
+
+
 def contract_finger(name):
 
     angle = 0
@@ -68,15 +83,15 @@ def contract_finger(name):
     #TODO: Create initialize angle function that determine max contraction angle per finger.
 
     if name == 'pointer': #pointer
-        angle = 10
+        angle = 90
     elif name == 'middle': #middle
-        angle = 10
+        angle = 90
         servo = middle_finger
     elif name == 'ring': #ring
-        angle = 10
+        angle = 75
         servo = ring_finger
     elif name == 'pinky': #pinky
-        angle = 10
+        angle = 75
         servo = pinky_finger
     # elif servo.pin == 'P0':  #thumb
     #     angle = 90
@@ -137,6 +152,19 @@ def close_hand():
         finger.set_angle(angle)
         finger.current_angle = angle
         time.sleep(0.04)
+
+
+### END FINGERS ###
+
+### Myoware ###
+
+myoware = ADC('A3')
+
+def read_muscle_signal():
+    myoware.read() #Serial communication is just an integer... it should be this easy
+    time.sleep(0.001)
+
+### End Myoware ###
 
 
 # def start_speed_thread():
